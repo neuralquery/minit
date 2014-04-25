@@ -91,14 +91,21 @@ class Minit {
 
 			// Make sure this is a relative URL so that we can check if it is local
 			$src = str_replace( $object->base_url, '', $object->registered[ $script ]->src );
-
+			
+			$file_src = apply_filters('minit-file-src-' . $extension,
+				ABSPATH . $src,
+				$object,
+				$object->registered[ $script ]->src,
+				$script
+			);
+			
 			// Skip if the file is not hosted locally
-			if ( ! file_exists( ABSPATH . $src ) || empty( $src ) )
+			if ( ! file_exists( $file_src ) || empty( $src ) )
 				continue;
 
 			$done[ $script ] = apply_filters( 
 					'minit-item-' . $extension, 
-					file_get_contents( ABSPATH . $src ),
+					file_get_contents( $file_src ),
 					$object,
 					$script
 				);
